@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}
+Scan History | SecureScan
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+<span class="hero-label">
+    SECURITY LOG
+</span>
+
+<h1>
+    Scan History
+</h1>
+
+<p>
+    Review your previous security analyses.
+</p>
+
+</section> <section class="card">
+{% if scans %}
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Risk</th>
+                <th>Score</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for scan in scans %}
+
+            <tr>
+
+                <td>
+                    #{{ scan["id"] }}
+                </td>
+
+                <td>
+                    {{ scan["scan_type"] }}
+                </td>
+
+                <td class="target">
+                    {{ scan["target"] }}
+                </td>
+
+                <td>
+
+                    <span
+                        class="badge
+                        {{ scan['risk_level']|lower }}"
+                    >
+                        {{ scan["risk_level"] }}
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ scan["risk_score"] }}/100
+                </td>
+
+                <td>
+                    {{ scan["created_at"] }}
+                </td>
+
+                <td>
+
+                    <a
+                        class="view-link"
+                        href="{{ url_for(
+                            'scan_details',
+                            scan_id=scan['id']
+                        ) }}"
+                    >
+                        View
+                    </a>
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<div class="empty">
+
+    <div>📋</div>
+
+    <p>
+        No scan history available.
+    </p>
+
+</div>
+
+{% endif %}
+
+</section>
+{% endblock %}
