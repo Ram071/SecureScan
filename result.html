@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}
+Scan Result | SecureScan
+{% endblock %}
+
+{% block content %}
+
+<section class="result-header">
+<div>
+
+    <span class="hero-label">
+        SECURITY ANALYSIS
+    </span>
+
+    <h1>
+        Scan #{{ result.scan_id }}
+    </h1>
+
+    <p>
+        {{ result.scan_type }} analysis completed.
+    </p>
+
+</div>
+
+<div class="risk-circle {{ result.risk_level|lower }}">
+
+    <strong>
+        {{ result.score }}
+    </strong>
+
+    <span>
+        / 100
+    </span>
+
+</div>
+
+</section> <section class="card result-status">
+<div>
+
+    <span class="muted">
+        Risk Classification
+    </span>
+
+    <h2>
+        <span
+            class="badge
+            {{ result.risk_level|lower }}"
+        >
+            {{ result.risk_level }}
+        </span>
+    </h2>
+
+</div>
+
+<div class="score-bar">
+
+    <div
+        class="score-fill
+        {{ result.risk_level|lower }}"
+        style="width: {{ result.score }}%;"
+    ></div>
+
+</div>
+
+</section> <section class="card">
+<h2>
+    Analyzed Target
+</h2>
+
+<div class="target-box">
+
+    <code>
+        {{ result.target }}
+    </code>
+
+</div>
+
+</section>
+{% if result.hostname %}
+
+<section class="card">
+<h2>
+    Hostname
+</h2>
+
+<div class="target-box">
+
+    <code>
+        {{ result.hostname }}
+    </code>
+
+</div>
+
+</section>
+{% endif %}
+
+{% if result.hashes %}
+
+<section class="card">
+<h2>
+    Cryptographic Hashes
+</h2>
+
+<div class="hash-list">
+
+    <div>
+        <strong>MD5</strong>
+        <code>{{ result.hashes.md5 }}</code>
+    </div>
+
+    <div>
+        <strong>SHA-1</strong>
+        <code>{{ result.hashes.sha1 }}</code>
+    </div>
+
+    <div>
+        <strong>SHA-256</strong>
+        <code>{{ result.hashes.sha256 }}</code>
+    </div>
+
+</div>
+
+</section>
+{% endif %}
+
+<section class="card">
+<h2>
+    Why was this score assigned?
+</h2>
+
+<div class="findings">
+
+{% for finding in result.findings %}
+
+    <div class="finding">
+
+        <span>
+            ✓
+        </span>
+
+        <p>
+            {{ finding }}
+        </p>
+
+    </div>
+
+{% endfor %}
+
+</div>
+
+</section>
+{% if result.threat_intelligence %}
+
+<section class="card">
+<h2>
+    Threat Intelligence
+</h2>
+
+{% if result.threat_intelligence.enabled %}
+
+    {% if result.threat_intelligence.found %}
+
+    <p>
+        External intelligence data was found
+        for this file hash.
+    </p>
+
+    {% else %}
+
+    <p>
+        No matching external intelligence
+        record was found.
+    </p>
+
+    {% endif %}
+
+{% else %}
+
+    <p>
+        External threat intelligence is not configured.
+    </p>
+
+{% endif %}
+
+</section>
+{% endif %}
+
+<div class="actions">
+<a
+    class="button"
+    href="{{ url_for(
+        'report',
+        scan_id=result.scan_id
+    ) }}"
+>
+    Download JSON Report
+</a>
+
+<a
+    class="button secondary"
+    href="{{ url_for('index') }}"
+>
+    New Scan
+</a>
+
+</div>
+{% endblock %}
