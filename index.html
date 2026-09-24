@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | SecureScan
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+<div>
+
+    <span class="hero-label">
+        SECURITY ANALYSIS PLATFORM
+    </span>
+
+    <h1>
+        Analyze. Detect. Protect.
+    </h1>
+
+    <p>
+        SecureScan analyzes URLs and files for
+        common suspicious indicators and produces
+        an explainable security risk score.
+    </p>
+
+</div>
+
+<div class="hero-shield">
+    🛡️
+</div>
+
+</section> <section class="scanner-grid">
+<div class="card scanner-card">
+
+    <div class="scanner-icon">
+        🔗
+    </div>
+
+    <h2>
+        URL Scanner
+    </h2>
+
+    <p>
+        Check URLs for common suspicious
+        characteristics.
+    </p>
+
+    <form
+        method="POST"
+        action="{{ url_for('scan_url') }}"
+    >
+
+        <input
+            type="text"
+            name="url"
+            placeholder="https://example.com"
+            required
+        >
+
+        <button type="submit">
+            Analyze URL →
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="card scanner-card">
+
+    <div class="scanner-icon">
+        📁
+    </div>
+
+    <h2>
+        File Scanner
+    </h2>
+
+    <p>
+        Analyze file metadata, extensions
+        and cryptographic hashes.
+    </p>
+
+    <form
+        method="POST"
+        action="{{ url_for('scan_file') }}"
+        enctype="multipart/form-data"
+    >
+
+        <input
+            type="file"
+            name="file"
+            required
+        >
+
+        <button type="submit">
+            Analyze File →
+        </button>
+
+    </form>
+
+    <small>
+        Maximum file size: 10 MB
+    </small>
+
+</div>
+
+</section> <section class="card">
+<div class="section-heading">
+
+    <div>
+        <h2>
+            Recent Scans
+        </h2>
+
+        <p class="muted">
+            Your latest security analyses.
+        </p>
+    </div>
+
+    <a
+        class="button secondary"
+        href="{{ url_for('history') }}"
+    >
+        View All
+    </a>
+
+</div>
+
+
+{% if scans %}
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Risk</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for scan in scans %}
+
+            <tr>
+
+                <td>
+                    {{ scan["scan_type"] }}
+                </td>
+
+                <td class="target">
+                    {{ scan["target"] }}
+                </td>
+
+                <td>
+
+                    <span
+                        class="badge
+                        {{ scan['risk_level']|lower }}"
+                    >
+                        {{ scan["risk_level"] }}
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ scan["risk_score"] }}/100
+                </td>
+
+                <td>
+                    {{ scan["created_at"] }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<div class="empty">
+    <div>🔍</div>
+    <p>No scans yet. Start your first analysis above.</p>
+</div>
+
+{% endif %}
+
+</section>
+{% endblock %}
