@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard | SecureScan
+{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+<span class="hero-label">
+    ADMINISTRATION
+</span>
+
+<h1>
+    Security Dashboard
+</h1>
+
+<p>
+    Monitor SecureScan users and scan activity.
+</p>
+
+</section> <section class="stats-grid">
+<div class="stat-card">
+
+    <span>
+        👥
+    </span>
+
+    <div>
+        <small>Total Users</small>
+        <strong>
+            {{ statistics.users }}
+        </strong>
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <span>
+        🔍
+    </span>
+
+    <div>
+        <small>Total Scans</small>
+        <strong>
+            {{ statistics.scans }}
+        </strong>
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <span>
+        ⚠️
+    </span>
+
+    <div>
+        <small>High/Critical</small>
+        <strong>
+            {{ statistics.high_risk }}
+        </strong>
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <span>
+        🔗
+    </span>
+
+    <div>
+        <small>URL Scans</small>
+        <strong>
+            {{ statistics.url_scans }}
+        </strong>
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <span>
+        📁
+    </span>
+
+    <div>
+        <small>File Scans</small>
+        <strong>
+            {{ statistics.file_scans }}
+        </strong>
+    </div>
+
+</div>
+
+</section> <section class="card">
+<h2>
+    Registered Users
+</h2>
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Created</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for user in users %}
+
+            <tr>
+
+                <td>
+                    #{{ user["id"] }}
+                </td>
+
+                <td>
+                    {{ user["username"] }}
+                </td>
+
+                <td>
+                    {{ user["email"] }}
+                </td>
+
+                <td>
+                    <span class="role">
+                        {{ user["role"] }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ user["created_at"] }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</section> <section class="card">
+<h2>
+    Recent Scan Activity
+</h2>
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Type</th>
+                <th>Target</th>
+                <th>Risk</th>
+                <th>Score</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for scan in scans[:20] %}
+
+            <tr>
+
+                <td>
+                    #{{ scan["id"] }}
+                </td>
+
+                <td>
+                    {{ scan["username"] }}
+                </td>
+
+                <td>
+                    {{ scan["scan_type"] }}
+                </td>
+
+                <td class="target">
+                    {{ scan["target"] }}
+                </td>
+
+                <td>
+
+                    <span
+                        class="badge
+                        {{ scan['risk_level']|lower }}"
+                    >
+                        {{ scan["risk_level"] }}
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ scan["risk_score"] }}/100
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</section>
+{% endblock %}
